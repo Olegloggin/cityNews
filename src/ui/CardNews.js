@@ -1,40 +1,27 @@
 import React from 'react';
 import {TouchableOpacity, View, Text, StyleSheet, Image} from 'react-native';
-import Icon from 'react-native-vector-icons/Ionicons';
+import NewsFooter from './NewsFooter';
 
 import theme from '../theme';
-import {dateFormat} from '../formatters';
 
-const CardNews = props => {
-  const favoriteColor = props.isFavorite ? theme.yellow : theme.colorGray;
-  return (
-    <View style={styles.main}>
-      <TouchableOpacity activeOpacity={0.9} onPress={props.onPress}>
-        <Text style={styles.title}>{props.item.title}</Text>
-        <Image style={styles.img} source={{uri: props.item.images[0].image}} />
-      </TouchableOpacity>
-      <Text style={styles.bodyText} numberOfLines={2}>
-        {props.item.body_text}
-      </Text>
-      <View style={styles.separator} />
-      <View style={styles.itemFooter}>
-        <TouchableOpacity
-          activeOpacity={0.9}
-          onPress={() => props.addFavorite(props.item.id)}>
-          <Icon
-            size={18}
-            name={'md-star'}
-            color={favoriteColor}
-            style={styles.footerHeart}
-          />
-        </TouchableOpacity>
-        <Text style={styles.date}>
-          {dateFormat(props.item.publication_date)}
-        </Text>
-      </View>
-    </View>
-  );
-};
+const CardNews = ({isFavorite, onPress, item, addFavorite}) => (
+  <View style={styles.main}>
+    <TouchableOpacity activeOpacity={0.9} onPress={onPress}>
+      <Text style={styles.title}>{item.title}</Text>
+      <Image style={styles.img} source={{uri: item.images[0].image}} />
+    </TouchableOpacity>
+    <Text style={styles.bodyText} numberOfLines={2}>
+      {item.body_text}
+    </Text>
+    <View style={styles.separator} />
+    <NewsFooter
+      id={item.id}
+      publication_date={item.publication_date}
+      addFavorite={addFavorite}
+      isFavorite={isFavorite}
+    />
+  </View>
+);
 
 const styles = StyleSheet.create({
   main: {
@@ -68,17 +55,6 @@ const styles = StyleSheet.create({
     borderWidth: theme.aligned(0.3),
     borderColor: theme.colorGray,
     marginVertical: theme.aligned(5),
-  },
-  itemFooter: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  footerHeart: {
-    marginLeft: theme.aligned(5),
-  },
-  date: {
-    fontSize: theme.fontSize0,
-    color: theme.colorGray,
   },
 });
 

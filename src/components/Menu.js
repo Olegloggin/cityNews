@@ -1,12 +1,32 @@
-import {TouchableOpacity, Text} from 'react-native';
 import React from 'react';
+import {connect} from 'react-redux';
 
-const Menu = () => {
-  return (
-    <TouchableOpacity>
-      <Text>Get</Text>
-    </TouchableOpacity>
-  );
-};
+import {getCityListAction} from '../actions/getCityListAction';
+import Scroll from '../ui/Scroll';
+import CityesList from '../ui/CityesList';
 
-export default Menu;
+class Menu extends React.Component {
+  componentDidMount() {
+    this.props.getCityListAction();
+  }
+
+  render() {
+    return (
+      <Scroll>
+        <CityesList city={this.props.city} cityes={this.props.cityes} />
+      </Scroll>
+    );
+  }
+}
+
+const connector = connect(
+  state => ({
+    cityes: state.settingsReducer.cityes,
+    city: state.settingsReducer.currentCity,
+  }),
+  {
+    getCityListAction: getCityListAction,
+  },
+);
+
+export default connector(Menu);

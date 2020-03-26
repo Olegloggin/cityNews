@@ -10,6 +10,10 @@ export const getListNews = (page, dispatch) => {
   );
 };
 
+export const getCityList = dispatch => {
+  return makeRequest('/public-api/v1.4/locations', 'get');
+};
+
 const makeRequest = (path, method) => dispatch => {
   const config = {
     url: backend.URL + path,

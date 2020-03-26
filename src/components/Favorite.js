@@ -5,6 +5,7 @@ import {connect} from 'react-redux';
 import {addFavoriteAction} from '../actions/addFavorite';
 import Screen from '../ui/Screen';
 import CardNews from '../ui/CardNews';
+import EmptyList from '../ui/EmptyList';
 
 class Favorite extends React.Component {
   render() {
@@ -12,20 +13,29 @@ class Favorite extends React.Component {
     const favoriteNews = news.filter(item => favorite.includes(item.id));
     return (
       <Screen>
-        <FlatList
-          data={favoriteNews}
-          renderItem={({item}) => {
-            const isFavorite = favorite.includes(item.id);
-            return (
-              <CardNews
-                item={item}
-                addFavorite={this.props.addFavoriteAction}
-                isFavorite={isFavorite}
-              />
-            );
-          }}
-          keyExtractor={item => item.id.toString()}
-        />
+        {favoriteNews.length ? (
+          <FlatList
+            data={favoriteNews}
+            renderItem={({item}) => {
+              const isFavorite = favorite.includes(item.id);
+              return (
+                <CardNews
+                  item={item}
+                  addFavorite={this.props.addFavoriteAction}
+                  isFavorite={isFavorite}
+                  onPress={() =>
+                    this.props.navigation.navigate('NewsLearnMore', {
+                      id: item.id,
+                    })
+                  }
+                />
+              );
+            }}
+            keyExtractor={item => item.id.toString()}
+          />
+        ) : (
+          <EmptyList />
+        )}
       </Screen>
     );
   }

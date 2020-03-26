@@ -1,7 +1,7 @@
 import React from 'react';
 import {createAppContainer} from 'react-navigation';
 import {createMaterialBottomTabNavigator} from 'react-navigation-material-bottom-tabs';
-// import { createStackNavigator } from 'react-navigation-stack';
+import {createStackNavigator} from 'react-navigation-stack';
 
 import theme from '../theme';
 import News from './News';
@@ -9,12 +9,23 @@ import Favorite from './Favorite';
 import Menu from './Menu';
 import Search from './Search';
 import IconComponent from '../ui/IconComponent';
-// import NewsLearnMore from './NewsLearnMore';
+import NewsScreen from './NewsScreen';
+
+const NewsScreens = createStackNavigator(
+  {
+    News: {screen: News},
+    NewsLearnMore: {screen: NewsScreen},
+  },
+  {
+    initialRouteName: 'News',
+    headerMode: 'none',
+  },
+);
 
 const BottomTabNavigator = createMaterialBottomTabNavigator(
   {
     News: {
-      screen: News,
+      screen: NewsScreens,
       navigationOptions: {
         tabBarIcon: ({focused}) => (
           <IconComponent name={'ios-images'} focused={focused} />
@@ -57,10 +68,5 @@ const BottomTabNavigator = createMaterialBottomTabNavigator(
     },
   },
 );
-
-// const NewsScreen = createStackNavigator({
-//   News: {screen: News},
-//   NewsLearnMore: {screen: NewsLearnMore},
-// });
 
 export default createAppContainer(BottomTabNavigator);

@@ -22,6 +22,11 @@ class Theme {
   yellow = 'rgb(255, 196, 0)';
 
   /*
+   * backgroundColor green
+   */
+  green = 'rgb(22, 175, 47)';
+
+  /*
    * backgroundColor white with opacity
    */
   colorOpacityWhite = 'rgba(255, 255, 255, 0.4)';
@@ -50,6 +55,11 @@ class Theme {
    * fontSize1
    */
   fontSize1 = this.aligned(14);
+
+  /*
+   * fontSize2
+   */
+  fontSize2 = this.aligned(16);
 
   /*
    * fontColor
