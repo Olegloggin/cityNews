@@ -8,7 +8,7 @@ import reducers from './reducers.js';
 const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
-  whitelist: ['newsReducer'],
+  whitelist: ['newsReducer', 'settingsReducer'],
 };
 
 const persistedReducer = persistReducer(persistConfig, reducers);

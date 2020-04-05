@@ -15,7 +15,7 @@ const CityesList = ({city, cityes}) => {
     return {...item, checked: false};
   });
 
-  const [cityesWithState, setcityesWithState] = useState(checked);
+  const [cityesWithState, setCityesWithState] = useState(checked);
 
   const changeCheck = changeCity => {
     const newChecked = cityesWithState.map(item => {
@@ -24,8 +24,16 @@ const CityesList = ({city, cityes}) => {
       }
       return {...item};
     });
+    setCityesWithState(newChecked);
+  };
+
+  const cancel = () => {
+    setCityesWithState(checked);
     setIsModal(false);
-    setcityesWithState(newChecked);
+  };
+
+  const ok = () => {
+    setIsModal(false);
   };
 
   return (
@@ -56,6 +64,14 @@ const CityesList = ({city, cityes}) => {
                 </TouchableOpacity>
               ))}
             </Scroll>
+            <View style={styles.footer}>
+              <TouchableOpacity style={styles.footerButton} onPress={cancel}>
+                <Text>Отмена</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.footerButton} onPress={ok}>
+                <Text>Ок</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
       </Modal>
@@ -100,6 +116,20 @@ const styles = StyleSheet.create({
   icon: {
     position: 'absolute',
     left: theme.aligned(5),
+  },
+  footer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    height: theme.aligned(45),
+    alignItems: 'center',
+    borderTopWidth: theme.aligned(1),
+    borderTopColor: theme.colorGray,
+  },
+  footerButton: {
+    flex: 1,
+    height: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
 
