@@ -8,31 +8,50 @@ import Screen from '../ui/Screen';
 import CardNews from '../ui/CardNews';
 
 class News extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {page: 1};
-  }
+  state = {page: 1};
+  initialPage = 1;
+  currentCity = this.props.currentCity.slug;
+  getNewsAction = this.props.getNewsAction;
 
   componentDidMount() {
-    this.props.getNewsAction(1);
+    this.getNewsAction(this.initialPage, this.currentCity);
+  }
+
+  componentDidUpdate(prev) {
+    this.currentCity = this.props.currentCity.slug;
+    if (prev.currentCity.slug !== this.currentCity) {
+      this.getNewsAction(this.initialPage, this.currentCity);
+      this.upToTopList();
+    }
   }
 
   refresh() {
-    this.props.getNewsAction(1);
+    this.getNewsAction(this.initialPage, this.currentCity);
   }
 
   getNextPage() {
     this.setState(prev => {
-      this.props.getNewsAction(prev.page + 1);
+      this.getNewsAction(prev.page + 1, this.currentCity);
       return {page: prev.page + 1};
     });
   }
 
+  upToTopList() {
+    this.flatListRef.scrollToIndex({index: 0});
+  }
+
   render() {
-    const {news, isRequested, favorite} = this.props;
+    const {
+      news,
+      isRequested,
+      favorite,
+      addFavoriteAction,
+      navigation,
+    } = this.props;
     return (
       <Screen>
         <FlatList
+          ref={ref => (this.flatListRef = ref)}
           onRefresh={() => this.refresh()}
           refreshing={isRequested}
           data={news}
@@ -41,10 +60,10 @@ class News extends React.Component {
             return (
               <CardNews
                 item={item}
-                addFavorite={this.props.addFavoriteAction}
+                addFavorite={addFavoriteAction}
                 isFavorite={isFavorite}
                 onPress={() =>
-                  this.props.navigation.navigate('NewsLearnMore', {id: item.id})
+                  navigation.navigate('NewsLearnMore', {id: item.id})
                 }
               />
             );
@@ -61,8 +80,9 @@ class News extends React.Component {
 const connector = connect(
   state => ({
     news: state.newsReducer.news,
-    isRequested: state.newsReducer.isRequested,
+    isRequested: state.networkReducer.isRequested,
     favorite: state.newsReducer.favorite,
+    currentCity: state.settingsReducer.currentCity,
   }),
   {
     getNewsAction: getNewsAction,

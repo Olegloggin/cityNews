@@ -2,6 +2,7 @@ import React from 'react';
 import {connect} from 'react-redux';
 
 import {getCityListAction} from '../actions/getCityListAction';
+import {changeCityAction} from '../actions/changeCityAction';
 import Scroll from '../ui/Scroll';
 import CityesList from '../ui/CityesList';
 
@@ -11,9 +12,14 @@ class Menu extends React.Component {
   }
 
   render() {
+    const {cityes, city, getCityListAction, changeCityAction} = this.props;
     return (
       <Scroll>
-        <CityesList city={this.props.city} cityes={this.props.cityes} />
+        <CityesList
+          city={city}
+          cityes={cityes}
+          changeCityAction={changeCityAction}
+        />
       </Scroll>
     );
   }
@@ -26,6 +32,7 @@ const connector = connect(
   }),
   {
     getCityListAction: getCityListAction,
+    changeCityAction: changeCityAction,
   },
 );
 

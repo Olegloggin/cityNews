@@ -1,4 +1,5 @@
 import {getCityType} from '../actions/getCityListAction';
+import {changeCityType} from '../actions/changeCityAction';
 
 const initialState = {
   cityes: [],
@@ -13,7 +14,10 @@ export const settingsReducer = (state = initialState, action) => {
     case getCityType.getCitySuccessful: {
       return {...state, cityes: action.payload};
     }
+    case changeCityType.changeCity: {
+      return {...state, currentCity: action.payload};
+    }
     default:
-      return {...state};
+      return state;
   }
 };

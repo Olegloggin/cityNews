@@ -1,13 +1,13 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {TouchableOpacity, Text, View, StyleSheet, Modal} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 import Scroll from './Scroll';
 import theme from '../theme';
 
-const CityesList = ({city, cityes}) => {
+const CityesList = ({city, cityes, changeCityAction}) => {
   const [isModal, setIsModal] = useState(false);
-
+  console.log('cityes', cityes);
   const checked = cityes.map(item => {
     if (item.slug === city.slug) {
       return {...item, checked: true};
@@ -17,12 +17,16 @@ const CityesList = ({city, cityes}) => {
 
   const [cityesWithState, setCityesWithState] = useState(checked);
 
+  useEffect(() => {
+    setCityesWithState(checked);
+  }, [cityes]);
+
   const changeCheck = changeCity => {
     const newChecked = cityesWithState.map(item => {
       if (item.slug === changeCity.slug) {
-        return {...item, checked: !changeCity.checked};
+        return {...item, checked: true};
       }
-      return {...item};
+      return {...item, checked: false};
     });
     setCityesWithState(newChecked);
   };
@@ -34,11 +38,22 @@ const CityesList = ({city, cityes}) => {
 
   const ok = () => {
     setIsModal(false);
+    let newCity = cityesWithState.find(item => {
+      return item.checked;
+    });
+    if (!newCity) {
+      newCity = city;
+    }
+    changeCityAction(newCity);
   };
 
   return (
     <View>
-      <TouchableOpacity style={styles.point} onPress={() => setIsModal(true)}>
+      <TouchableOpacity
+        style={styles.point}
+        onPress={() => {
+          setIsModal(true);
+        }}>
         <Icon size={35} name={'md-map'} color={theme.colorGray} />
         <Text style={styles.text}>{city.name}</Text>
       </TouchableOpacity>

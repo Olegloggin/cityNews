@@ -9,7 +9,7 @@ import EmptyList from '../ui/EmptyList';
 
 class Favorite extends React.Component {
   render() {
-    const {news, favorite} = this.props;
+    const {news, favorite, addFavoriteAction, navigation} = this.props;
     const favoriteNews = news.filter(item => favorite.includes(item.id));
     return (
       <Screen>
@@ -21,12 +21,10 @@ class Favorite extends React.Component {
               return (
                 <CardNews
                   item={item}
-                  addFavorite={this.props.addFavoriteAction}
+                  addFavorite={addFavoriteAction}
                   isFavorite={isFavorite}
                   onPress={() =>
-                    this.props.navigation.navigate('NewsLearnMore', {
-                      id: item.id,
-                    })
+                    navigation.navigate('NewsLearnMore', {id: item.id})
                   }
                 />
               );
