@@ -13,8 +13,12 @@ const persistConfig = {
 
 const persistedReducer = persistReducer(persistConfig, reducers);
 
+export const createStoreEnhancer = () => {
+  return applyMiddleware(thunk);
+};
+
 const storePersistor = () => {
-  const store = createStore(persistedReducer, {}, applyMiddleware(thunk));
+  const store = createStore(persistedReducer, {}, createStoreEnhancer());
   const persistor = persistStore(store);
   return {store, persistor};
 };

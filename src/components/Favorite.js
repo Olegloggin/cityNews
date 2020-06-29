@@ -5,24 +5,33 @@ import {connect} from 'react-redux';
 import {addFavoriteAction} from '../actions/addFavorite';
 import Screen from '../ui/Screen';
 import CardNews from '../ui/CardNews';
+import CardSearch from '../ui/CardSearch';
 import EmptyList from '../ui/EmptyList';
 
 class Favorite extends React.Component {
   render() {
-    const {news, favorite, addFavoriteAction, navigation} = this.props;
-    const favoriteNews = news.filter(item => favorite.includes(item.id));
+    const {favorite, addFavoriteAction, navigation} = this.props;
     return (
       <Screen>
-        {favoriteNews.length ? (
+        {favorite.length ? (
           <FlatList
-            data={favoriteNews}
+            data={favorite}
             renderItem={({item}) => {
-              const isFavorite = favorite.includes(item.id);
-              return (
+              const isFavorite = favorite.find(favor => favor.id === item.id);
+              return item.ctype ? (
+                <CardSearch
+                  item={item}
+                  onPress={() => {
+                    navigation.navigate('SearchLearnMore', {item});
+                  }}
+                  isFavorite={!!isFavorite}
+                  addFavorite={addFavoriteAction}
+                />
+              ) : (
                 <CardNews
                   item={item}
                   addFavorite={addFavoriteAction}
-                  isFavorite={isFavorite}
+                  isFavorite={!!isFavorite}
                   onPress={() =>
                     navigation.navigate('NewsLearnMore', {id: item.id})
                   }
@@ -32,7 +41,7 @@ class Favorite extends React.Component {
             keyExtractor={item => item.id.toString()}
           />
         ) : (
-          <EmptyList />
+          <EmptyList text="Список пока пуст" />
         )}
       </Screen>
     );

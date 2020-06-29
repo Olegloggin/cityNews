@@ -15,7 +15,7 @@ const CardNews = ({isFavorite, onPress, item, addFavorite}) => (
     </Text>
     <View style={styles.separator} />
     <NewsFooter
-      id={item.id}
+      item={item}
       publication_date={item.publication_date}
       addFavorite={addFavorite}
       isFavorite={isFavorite}

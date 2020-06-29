@@ -3,9 +3,9 @@ import {View, Text, StyleSheet} from 'react-native';
 
 import theme from '../theme';
 
-const EmptyList = () => (
+const EmptyList = ({text}) => (
   <View style={styles.main}>
-    <Text style={styles.text}>Список пока пуст</Text>
+    <Text style={styles.text}>{text}</Text>
   </View>
 );
 

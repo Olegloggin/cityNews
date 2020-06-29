@@ -150,6 +150,12 @@ android {
             keyAlias 'androiddebugkey'
             keyPassword 'android'
         }
+        release {
+            storeFile file(getEnvProp('STORE', 'release.keystore'))
+            storePassword getEnvProp('STORE_PASSWORD', '')
+            keyAlias getEnvProp('KEY_ALIAS', '')
+            keyPassword getEnvProp('KEY_PASSWORD', '')
+        }
     }
     buildTypes {
         debug {
@@ -192,6 +198,10 @@ dependencies {
     } else {
         implementation jscFlavor
     }
+}
+
+def getEnvProp(String name, String defaultValue) {
+    return System.getenv(name) ?: findProperty(name) ?: defaultValue
 }
 
 // Run this once to be able to run the application with BUCK

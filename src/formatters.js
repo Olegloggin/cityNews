@@ -41,3 +41,18 @@ export function dateFormat(date) {
   }
   return parseDate.getDate() + ' ' + month;
 }
+
+export function category(cat) {
+  switch (cat) {
+    case 'news':
+      return 'новости';
+    case 'event':
+      return 'события';
+    case 'place':
+      return 'места';
+    case 'list':
+      return 'подборки';
+    default:
+      return 'не известно';
+  }
+}

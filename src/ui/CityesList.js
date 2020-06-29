@@ -7,7 +7,7 @@ import theme from '../theme';
 
 const CityesList = ({city, cityes, changeCityAction}) => {
   const [isModal, setIsModal] = useState(false);
-  console.log('cityes', cityes);
+
   const checked = cityes.map(item => {
     if (item.slug === city.slug) {
       return {...item, checked: true};

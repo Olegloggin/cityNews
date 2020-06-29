@@ -1,17 +1,51 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {connect} from 'react-redux';
 
 import NewsContent from '../ui/NewsContent';
 import {addFavoriteAction} from '../actions/addFavorite';
 
 const NewsScreen = ({navigation, news, addFavoriteAction, favorite}) => {
-  const thisNews = news.filter(item => item.id === navigation.state.params.id);
-  const isFavorite = favorite.includes(thisNews[0].id);
+  const [copyIsFavorite, setCopyIsFavorite] = useState();
+  let foundNews = news.find(item => item.id === navigation.state.params.id);
+  let isFavorite;
+
+  if (!foundNews) {
+    foundNews = favorite.find(item => item.id === navigation.state.params.id);
+    isFavorite = !!foundNews && true;
+  } else {
+    isFavorite = !!favorite.find(
+      item => item.id === navigation.state.params.id,
+    );
+  }
+
+  useEffect(() => {
+    const blur = navigation.addListener('didBlur', () => {
+      if (isFavorite !== copyIsFavorite) {
+        addFavoriteAction(foundNews);
+      }
+    });
+
+    return () => blur.remove();
+  });
+
+  useEffect(() => {
+    setCopyIsFavorite(isFavorite);
+  }, [foundNews, isFavorite]);
+
+  if (!foundNews) {
+    navigation.navigate('News');
+    return null;
+  }
+
+  const preAddFavoriteAction = data => {
+    setCopyIsFavorite(!copyIsFavorite);
+  };
+
   return (
     <NewsContent
-      {...thisNews[0]}
-      addFavorite={addFavoriteAction}
-      isFavorite={isFavorite}
+      item={foundNews}
+      addFavorite={preAddFavoriteAction}
+      isFavorite={copyIsFavorite}
     />
   );
 };

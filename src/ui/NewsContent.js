@@ -1,12 +1,20 @@
 import React from 'react';
-import {View, Text, StyleSheet, Image} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  Linking,
+} from 'react-native';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 import NewsFooter from './NewsFooter';
 import Scroll from './Scroll';
 import theme from '../theme';
 
 const NewsContent = props => {
-  const {title, body_text, images} = props;
+  const {title, body_text, images, site_url} = props.item;
   return (
     <Scroll>
       <Text style={styles.title}>{title}</Text>
@@ -15,14 +23,21 @@ const NewsContent = props => {
         <Image style={styles.img} source={{uri: images[0].image}} />
       </View>
       <Text style={styles.bodyText}>{body_text}</Text>
+      {site_url ? (
+        <TouchableOpacity
+          style={styles.footerItem}
+          onPress={() => {
+            Linking.openURL(site_url);
+          }}>
+          <Icon name="ios-browsers" size={25} color={theme.colorDarkRed} />
+          <Text style={styles.footerItemText}>Подробнее на сайте KudaGo</Text>
+        </TouchableOpacity>
+      ) : null}
     </Scroll>
   );
 };
 
 const styles = StyleSheet.create({
-  main: {
-    padding: theme.aligned(10),
-  },
   title: {
     fontSize: theme.fontSize1,
     color: theme.colorDarkRed,
@@ -42,6 +57,16 @@ const styles = StyleSheet.create({
     lineHeight: theme.aligned(18),
     color: theme.fontColor,
     marginTop: theme.aligned(10),
+    marginBottom: theme.aligned(15),
+  },
+  footerItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: theme.aligned(15),
+  },
+  footerItemText: {
+    color: theme.colorGray,
+    marginLeft: theme.aligned(5),
   },
 });
 

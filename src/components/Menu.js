@@ -12,7 +12,7 @@ class Menu extends React.Component {
   }
 
   render() {
-    const {cityes, city, getCityListAction, changeCityAction} = this.props;
+    const {cityes, city, changeCityAction} = this.props;
     return (
       <Scroll>
         <CityesList

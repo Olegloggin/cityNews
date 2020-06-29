@@ -2,11 +2,11 @@ export const addFavoriteType = {
   addFavorite: 'addFavorite',
 };
 
-export const addFavoriteAction = id => {
-  return addFavorite(id);
+export const addFavoriteAction = item => {
+  return addFavorite(item);
 };
 
-const addFavorite = id => ({
+export const addFavorite = item => ({
   type: addFavoriteType.addFavorite,
-  payload: id,
+  payload: item,
 });

@@ -10,6 +10,7 @@ import Menu from './Menu';
 import Search from './Search';
 import IconComponent from '../ui/IconComponent';
 import NewsScreen from './NewsScreen';
+import SearchScreen from './SearchScreen';
 
 const NewsScreens = createStackNavigator(
   {
@@ -18,6 +19,17 @@ const NewsScreens = createStackNavigator(
   },
   {
     initialRouteName: 'News',
+    headerMode: 'none',
+  },
+);
+
+const SearchScreens = createStackNavigator(
+  {
+    Search: {screen: Search},
+    SearchLearnMore: {screen: SearchScreen},
+  },
+  {
+    initialRouteName: 'Search',
     headerMode: 'none',
   },
 );
@@ -41,7 +53,7 @@ const BottomTabNavigator = createMaterialBottomTabNavigator(
       },
     },
     Search: {
-      screen: Search,
+      screen: SearchScreens,
       navigationOptions: {
         tabBarIcon: ({focused}) => (
           <IconComponent name={'ios-search'} focused={focused} />

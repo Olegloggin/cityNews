@@ -6,6 +6,7 @@ import {getNewsAction} from '../actions/getNewsAction';
 import {addFavoriteAction} from '../actions/addFavorite';
 import Screen from '../ui/Screen';
 import CardNews from '../ui/CardNews';
+import EmptyList from '../ui/EmptyList';
 
 class News extends React.Component {
   state = {page: 1};
@@ -48,6 +49,7 @@ class News extends React.Component {
       addFavoriteAction,
       navigation,
     } = this.props;
+
     return (
       <Screen>
         <FlatList
@@ -56,18 +58,20 @@ class News extends React.Component {
           refreshing={isRequested}
           data={news}
           renderItem={({item}) => {
-            const isFavorite = favorite.includes(item.id);
+            const isFavorite = favorite.find(favor => favor.id === item.id);
             return (
               <CardNews
                 item={item}
                 addFavorite={addFavoriteAction}
-                isFavorite={isFavorite}
+                isFavorite={!!isFavorite}
                 onPress={() =>
                   navigation.navigate('NewsLearnMore', {id: item.id})
                 }
               />
             );
           }}
+          ListEmptyComponent={<EmptyList text="Список пока пуст" />}
+          contentContainerStyle={!news.length && {flex: 1}}
           onEndReached={() => this.getNextPage()}
           onEndReachedThreshold={2}
           keyExtractor={item => item.id.toString()}

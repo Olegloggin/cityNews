@@ -6,10 +6,10 @@ export const getNewsType = {
 };
 
 export const getNewsAction = (page, city) => dispatch => {
-  dispatch(api.getListNews(page, city))
+  return dispatch(api.getListNews(page, city))
     .then(dataRequest => {
       if (page === 1) {
-        return dispatch(getTopNewsSuccessful(dataRequest));
+        dispatch(getTopNewsSuccessful(dataRequest));
       } else {
         dispatch(getNewsSuccessful(dataRequest));
       }
@@ -17,12 +17,12 @@ export const getNewsAction = (page, city) => dispatch => {
     .catch(e => {});
 };
 
-const getNewsSuccessful = news => ({
+export const getNewsSuccessful = news => ({
   type: getNewsType.getNewsSuccessful,
   payload: news,
 });
 
-const getTopNewsSuccessful = news => ({
+export const getTopNewsSuccessful = news => ({
   type: getNewsType.getTopNewsSuccessful,
   payload: news,
 });

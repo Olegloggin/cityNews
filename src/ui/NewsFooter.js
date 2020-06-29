@@ -5,11 +5,11 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import theme from '../theme';
 import {dateFormat} from '../formatters';
 
-const NewsFooter = ({id, publication_date, addFavorite, isFavorite}) => {
+const NewsFooter = ({item, publication_date, addFavorite, isFavorite}) => {
   const favoriteColor = isFavorite ? theme.yellow : theme.colorGray;
   return (
     <View style={styles.itemFooter}>
-      <TouchableOpacity activeOpacity={0.9} onPress={() => addFavorite(id)}>
+      <TouchableOpacity activeOpacity={0.9} onPress={() => addFavorite(item)}>
         <Icon
           size={18}
           name={'md-star'}
@@ -17,7 +17,7 @@ const NewsFooter = ({id, publication_date, addFavorite, isFavorite}) => {
           style={styles.footerHeart}
         />
       </TouchableOpacity>
-      <Text style={styles.date}>{dateFormat(publication_date)}</Text>
+      <Text style={styles.date}>{dateFormat(item.publication_date)}</Text>
     </View>
   );
 };

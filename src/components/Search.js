@@ -1,48 +1,97 @@
 import React from 'react';
-import {FlatList, Text} from 'react-native';
+import {FlatList} from 'react-native';
 import {connect} from 'react-redux';
 
+import {addFavoriteAction} from '../actions/addFavorite';
 import {getSearch} from '../actions/api';
+import InputText from '../ui/InputText';
+import CardSearch from '../ui/CardSearch';
 import Screen from '../ui/Screen';
+import EmptyList from '../ui/EmptyList';
 
 class Search extends React.Component {
-  state = {page: 1};
-  initialPage = 1;
-  currentCity = this.props.currentCity.slug;
-  //getNewsAction = this.props.getNewsAction;
+  state = {
+    page: 1,
+    maxPage: 1,
+    searchText: '',
+    result: null,
+  };
 
-  componentDidMount() {
-    this.props.getSearch(this.currentCity).then(req => {
-      // console.log('WWW', req);
-    });
+  getNextPage() {
+    if (this.state.page < this.state.maxPage) {
+      this.props
+        .getSearch(
+          this.props.currentCity.slug,
+          this.state.searchText,
+          '',
+          '',
+          this.state.page + 1,
+        )
+        .then(req => {
+          this.setState(prev => {
+            return {
+              page: prev.page + 1,
+              result: [...prev.result, ...req.results],
+            };
+          });
+        })
+        .catch(e => {});
+    }
   }
-  // 
-  // 
-  // refresh() {
-  //   this.getNewsAction(this.initialPage, this.currentCity);
-  // }
-  // 
-  // getNextPage() {
-  //   this.setState(prev => {
-  //     this.getNewsAction(prev.page + 1, this.currentCity);
-  //     return {page: prev.page + 1};
-  //   });
-  // }
-  // 
+
+  search() {
+    const uploadItem = 20;
+    if (this.state.searchText.trim().length > 1) {
+      this.props
+        .getSearch(this.props.currentCity.slug, this.state.searchText)
+        .then(req => {
+          this.setState({
+            result: req.results,
+            maxPage: Math.ceil(req.count / uploadItem),
+            page: 1,
+          });
+        })
+        .catch(e => {});
+    }
+  }
 
   render() {
+    const {isRequested, navigation, favorite, addFavoriteAction} = this.props;
     return (
       <Screen>
-        <Text>123456</Text>
-        {/*<FlatList
-          onRefresh={() => this.refresh()}
-          //refreshing={isRequested}
-          //data={news}
-          renderItem={({item}) => <Text>123456</Text>}
-          onEndReached={() => this.getNextPage()}
-          onEndReachedThreshold={2}
-          keyExtractor={item => item.id.toString()}
-        />*/}
+        <InputText
+          value={this.state.searchText}
+          onChange={text => this.setState({searchText: text})}
+          onSearch={() => this.search()}
+        />
+        <FlatList
+          refreshing={isRequested}
+          data={this.state.result}
+          renderItem={({item, index}) => {
+            if (item.ctype === 'news') {
+              return null;
+            }
+            const isFavorite = favorite.find(favor => favor.id === item.id);
+            return (
+              <CardSearch
+                item={item}
+                onPress={() => {
+                  navigation.navigate('SearchLearnMore', {item});
+                }}
+                isFavorite={!!isFavorite}
+                addFavorite={addFavoriteAction}
+              />
+            );
+          }}
+          ListEmptyComponent={
+            Array.isArray(this.state.result) && !this.state.result.length ? (
+              <EmptyList text="Ничего не найдено" />
+            ) : null
+          }
+          onEndReached={() => !isRequested && this.getNextPage()}
+          onEndReachedThreshold={1}
+          keyExtractor={item => item.title}
+        />
       </Screen>
     );
   }
@@ -50,15 +99,13 @@ class Search extends React.Component {
 
 const connector = connect(
   state => ({
-    // news: state.newsReducer.news,
-    // isRequested: state.newsReducer.isRequested,
-    // favorite: state.newsReducer.favorite,
+    isRequested: state.networkReducer.isRequested,
     currentCity: state.settingsReducer.currentCity,
+    favorite: state.newsReducer.favorite,
   }),
   {
-    // getNewsAction: getNewsAction,
-    // addFavoriteAction: addFavoriteAction,
     getSearch: getSearch,
+    addFavoriteAction: addFavoriteAction,
   },
 );
 

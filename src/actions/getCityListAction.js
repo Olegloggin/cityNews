@@ -5,14 +5,14 @@ export const getCityType = {
 };
 
 export const getCityListAction = () => dispatch => {
-  dispatch(api.getCityList())
+  return dispatch(api.getCityList())
     .then(response => {
       dispatch(getCitySuccessful(response));
     })
     .catch(e => {});
 };
 
-const getCitySuccessful = cityList => ({
+export const getCitySuccessful = cityList => ({
   type: getCityType.getCitySuccessful,
   payload: cityList,
 });
